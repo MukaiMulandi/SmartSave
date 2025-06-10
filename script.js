@@ -1,20 +1,59 @@
-// Mobile Menu Toggle
-const hamburger = document.querySelector('.hamburger');
-const navLinks = document.querySelector('nav');
+document.addEventListener('DOMContentLoaded', function() {
+    // Mobile Navigation Toggle
+    const hamburger = document.querySelector('.hamburger');
+    const leftLinks = document.querySelector('.nav-left');
+    const rightLinks = document.querySelector('.nav-right');
+    
+    if (hamburger && leftLinks && rightLinks) {
+        hamburger.addEventListener('click', () => {
+            // Toggle both navigation groups
+            leftLinks.classList.toggle('active');
+            rightLinks.classList.toggle('active');
+            
+            // Toggle hamburger icon
+            hamburger.classList.toggle('active');
+        });
 
-hamburger.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-    hamburger.classList.toggle('active');
-});
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                leftLinks.classList.remove('active');
+                rightLinks.classList.remove('active');
+                hamburger.classList.remove('active');
+            });
+        });
+    }
 
-// Close menu when clicking a link
-document.querySelectorAll('nav a').forEach(link => {
-    link.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-        hamburger.classList.remove('active');
+    // Smooth Scrolling for all anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            // Skip if the link is just a # (empty anchor)
+            if (this.getAttribute('href') === '#') return;
+            
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                // Calculate header height to offset scroll position
+                const headerHeight = document.querySelector('header').offsetHeight;
+                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.navbar') && !e.target.closest('.hamburger')) {
+            leftLinks.classList.remove('active');
+            rightLinks.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
     });
 });
-
 // Testimonial Slider
 document.addEventListener('DOMContentLoaded', () => {
   const prevBtn = document.querySelector('.slider-arrow.prev'); // Previous button
